@@ -1,0 +1,7 @@
+{
+  "name": "商品信息管理api接口文档",
+  "version": "0.1.0",
+  "description": "商品信息的管理",
+  "title": "Custom apiDoc browser title",
+  "url" : "http://localhost:3000"
+}
