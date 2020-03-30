@@ -1,53 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const {
-  findGood,
-  findAll,
   delGood,
   updateGood,
   insertGood,
+  findAll,
+  findGoodsById,
+  findGoodsByPage,
+  findGoodsByType,
+  findGoodsByName,
+  findGoodsByStatus
 } = require("../controls/goodControler")
-
-
-/**
- * @api {post} /admin/goods/getGoodsById  商品查询
- * @apiName getInfoById
- * @apiGroup Goods
- *
- * @apiParam {String} _id  商品主键id
- * 
- * @apiSuccess {String} err 状态码r.
- * @apiSuccess {String} msg  信息提示.
- * @apiSuccess {Array} list  查询到的数据.
- * @apiSuccess {Array} ps1  如果不传id,则查询所有商品信息;
- * @apiSuccess {Array} ps2  如果传id,则根据id查询对应商品信息
- */
-// 查询商品信息  
-// 如果不传id,则查询所有商品信息;
-// 如果传id,则根据id查询对应商品信息
-router.post('/getGoodsById',(req,res) => {
-  let {_id} = req.body
-  if(_id){
-    findGood(_id)
-    .then((infos)=>{
-      res.send({list:infos,err:0,msg:"查询成功"})
-      console.log(infos)
-    })
-    .catch((err)=>{
-      res.send({err:-1,msg:"查询失败,请重试!"})
-      console.log(err)
-    })
-  }else{
-    findAll().then((infos)=>{
-      res.send({list:infos,err:0,msg:"查询成功"})
-      console.log(infos)
-    })
-    .catch((err)=>{
-      res.send({err:-1,msg:"查询失败,请重试!"})
-      console.log(err)
-    })
-  }
-})
 
 /**
  * @api {delete} /admin/goods/delGoods  商品删除
@@ -138,6 +101,200 @@ router.post('/addGoods',(req,res) => {
   .catch((err)=>{
     res.send({err:-1,msg:"数据插入失败,请重试!"})
     console.log(err,"数据插入失败,请重试!")
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getGoodsById  商品id查询
+ * @apiName getGoodsById
+ * @apiGroup Goods
+ *
+ * @apiParam {String} _id  商品主键id
+ * 
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 根据商品id查询商品信息  
+router.post('/getGoodsById',(req,res) => {
+  let {_id} = req.body
+  console.log(_id)
+  findGoodsById(_id)
+  .then((data)=>{
+    res.send({list:data,err:0,msg:"查询成功"})
+    console.log(data)
+  })
+  .catch((err)=>{
+    res.send({err:-1,msg:"查询失败,请重试!"})
+    console.log(err)
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getGoodsList  商品查询所有
+ * @apiName getGoodsList
+ * @apiGroup Goods
+ * 
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {String} allCount  数据总数.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 查询所有商品信息  
+router.post('/getGoodsList',(req,res) => {
+  findAll().then((infos)=>{
+    let allCount = infos.length
+    res.send({err:0,msg:"查询成功",allCount,list:infos})
+    console.log(infos)
+  })
+  .catch((err)=>{
+    res.send({err:-1,msg:"查询失败,请重试!"})
+    console.log(err)
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getInfosByPage   分页查询
+ * @apiName getInfosByPage
+ * @apiGroup Goods
+ *
+ * @apiParam {String} page 查询页码数.
+ * @apiParam {String} pageSize 每页的数据条数.
+ *
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 分页查询
+router.post("/getInfosByPage",(req,res)=>{
+  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  findGoodsByPage(page,pageSize)
+  .then((data)=>{
+    console.log(data)
+    let {result,allCount} = data
+    let limit = page/Math.ceil(allCount/pageSize)
+    if(limit>1){
+      console.log("输入查询页数过大")
+      res.send({err:-2,msg:"输入查询页数过大"})
+    }else{
+      res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
+    console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
+    }
+  })
+  .catch((err)=>{
+    res.send({err:-1,msg:"查询失败,请重试!"})
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getInfosByType   分类查询
+ * @apiName getInfosByType
+ * @apiGroup Goods
+ *
+ * @apiParam {String} type 商品类型.
+ * @apiParam {String} page 查询页码数.
+ * @apiParam {String} pageSize 每页的数据条数.
+ *
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 根据商品类别type查询商品信息
+router.post('/getInfosByType',(req,res)=>{
+  let {type} = req.body
+  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  findGoodsByType(type,page,pageSize)
+  .then((data)=>{
+    console.log(data)
+    let {result,allCount} = data
+    let limit = page/Math.ceil(allCount/pageSize)
+    if(limit>1){
+      console.log("输入查询页数过大")
+      res.send({err:-2,msg:"输入查询页数过大"})
+    }else{
+      res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
+      console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
+    }
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.send({err:-1,msg:"查询失败,请重试!"})
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getInfosByName   名称查询
+ * @apiName getInfosByName
+ * @apiGroup Goods
+ *
+ * @apiParam {String} name 商品名称.
+ * @apiParam {String} page 查询页码数.
+ * @apiParam {String} pageSize 每页的数据条数.
+ *
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 根据商品名称name查询商品信息
+router.post('/getInfosByName',(req,res)=>{
+  let {name} = req.body
+  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  findGoodsByName(name,page,pageSize)
+  .then((data)=>{
+    console.log(data)
+    let {result,allCount} = data
+    let limit = page/Math.ceil(allCount/pageSize)
+    if(limit>1){
+      console.log("输入查询页数过大")
+      res.send({err:-2,msg:"输入查询页数过大"})
+    }else{
+      res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
+      console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
+    }
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.send({err:-1,msg:"查询失败,请重试!"})
+  })
+})
+
+/**
+ * @api {post} /admin/goods/getInfosByStatus   状态查询
+ * @apiName getInfosByStatus
+ * @apiGroup Goods
+ *
+ * @apiParam {String} status 商品状态.
+ * @apiParam {String} page 查询页码数.
+ * @apiParam {String} pageSize 每页的数据条数.
+ *
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 根据商品状态status查询商品信息
+router.post('/getInfosByStatus',(req,res)=>{
+  let {status} = req.body
+  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  findGoodsByStatus(status,page,pageSize)
+  .then((data)=>{
+    console.log(data)
+    let {result,allCount} = data
+    let limit = page/Math.ceil(allCount/pageSize)
+    if(limit>1){
+      console.log("输入查询页数过大")
+      res.send({err:-2,msg:"输入查询页数过大"})
+    }else{
+      res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
+      console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
+    }
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.send({err:-1,msg:"查询失败,请重试!"})
   })
 })
 

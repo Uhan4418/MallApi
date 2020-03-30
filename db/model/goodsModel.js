@@ -11,7 +11,8 @@ let GoodsSchema = new mongoose.Schema({
   data:{type:String},
   stock:{type:Number}, // 库存
   detail:{type:String}, // 详情
-  img:{type:Object}// 图片
+  img:{type:Object},// 图片
+  status:{type:String}
 })
 
 let GoodsModel = mongoose.model('goods',GoodsSchema)
