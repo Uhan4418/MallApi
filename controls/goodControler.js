@@ -74,6 +74,13 @@ let findGoodsByStatus = async (status,page,pageSize) => {
   return {result,allCount}
 }
 
+// 修改商品状态值 根据id
+let updateStatusById = async (_id,status) => {
+  let result = await GoodModel.updateOne({_id},status)
+  return result
+}
+
+
 module.exports = {
   delGood,
   updateGood,
@@ -83,5 +90,6 @@ module.exports = {
   findGoodsByPage,
   findGoodsByType,
   findGoodsByName,
-  findGoodsByStatus
+  findGoodsByStatus,
+  updateStatusById
 }

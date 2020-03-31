@@ -9,7 +9,8 @@ const {
   findGoodsByPage,
   findGoodsByType,
   findGoodsByName,
-  findGoodsByStatus
+  findGoodsByStatus,
+  updateStatusById
 } = require("../controls/goodControler")
 
 /**
@@ -58,9 +59,9 @@ router.delete('/delGoods',(req,res) => {
 // 更新商品信息
 router.get('/updateGoods',(req,res) => {
   // 获取要更新数据的参数
-  let {_id,name,type,price,remark,data,stock,detail,img} = req.query
-  console.log({_id,name,type,price,remark,data,stock,detail,img})
-  updateGood(_id,{name,type,price,remark,data,stock,detail,img})
+  let {_id,name,type,price,remark,data,stock,detail,img,status} = req.query
+  console.log({_id,name,type,price,remark,data,stock,detail,img,status})
+  updateGood(_id,{name,type,price,remark,data,stock,detail,img,status})
   .then((infos) => {
     console.log(infos,"商品信息更新成功")
     res.send({err:0,msg:'商品信息更新成功'})
@@ -91,9 +92,9 @@ router.get('/updateGoods',(req,res) => {
 // 添加商品
 router.post('/addGoods',(req,res) => {
   // 接收请求插入的数据
-  let {name,type,price,remark,data,stock,detail,img} = req.body
+  let {name,type,price,remark,data,stock,detail,img,status} = req.body
   // 处理数据 将数据插入到数据库中
-  insertGood({name,type,price,remark,data,stock,detail,img})
+  insertGood({name,type,price,remark,data,stock,detail,img,status})
   .then((data)=>{
     console.log("数据插入成功",data )
     res.send({err:0,msg:"数据插入成功"})
@@ -295,6 +296,33 @@ router.post('/getInfosByStatus',(req,res)=>{
   .catch((err)=>{
     console.log(err)
     res.send({err:-1,msg:"查询失败,请重试!"})
+  })
+})
+
+/**
+ * @api {post} /admin/goods/updateStatusById   状态修改
+ * @apiName updateStatusById
+ * @apiGroup Goods
+ *
+ * @apiParam {String} _id 商品id.
+ * @apiParam {String} status 商品状态.
+ *
+ * @apiSuccess {String} err 状态码r.
+ * @apiSuccess {String} msg  信息提示.
+ * @apiSuccess {Array} list  查询到的数据.
+ */
+// 根据id只修改商品的状态值
+router.post('/updateStatusById',(req,res)=>{
+  let {_id,status} = req.body
+  console.log({_id,status})
+  updateStatusById(_id,{status})
+  .then((infos) => {
+    console.log(infos,"商品状态更新成功")
+    res.send({err:0,msg:'商品状态更新成功'})
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({err:-1,msg:'商品状态更新失败'});
   })
 })
 

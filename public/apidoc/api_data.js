@@ -592,6 +592,63 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/admin/goods/updateStatusById",
+    "title": "状态修改",
+    "name": "updateStatusById",
+    "group": "Goods",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>商品id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>商品状态.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "err",
+            "description": "<p>状态码r.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "msg",
+            "description": "<p>信息提示.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "list",
+            "description": "<p>查询到的数据.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routers/goodRouter.js",
+    "groupTitle": "Goods"
+  },
+  {
+    "type": "post",
     "url": "/admin/user/login",
     "title": "管理员登录",
     "name": "login",
