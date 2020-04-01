@@ -18,11 +18,17 @@ app.use('/public',express.static(path.join(__dirname,'./public')))
   路由
   1、用户登录路由
   2、商品操作路由
+  3、订单操作路由
 */
+
 let  userRouter = require("./routers/userRouter")
 app.use('/admin/user',userRouter) //登录注册不需要加锁
 let  goodRouter = require("./routers/goodRouter")
 app.use('/admin/goods',goodRouter) 
+let  orderRouter = require("./routers/orderRouter")
+app.use('/admin/orders',orderRouter) 
+let  uploadRouter = require("./routers/uploadRouter")
+app.use('/admin/uploads',uploadRouter)
 // let  uploadRouter = require('./router/uploadRouter')
 // let  foodRouter = require('./router/foodRouter')
 // app.use('/admin/food',tokenMiddleWare,foodRouter) //需要加锁的

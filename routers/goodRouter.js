@@ -101,7 +101,7 @@ router.post('/addGoods',(req,res) => {
   })
   .catch((err)=>{
     res.send({err:-1,msg:"数据插入失败,请重试!"})
-    console.log(err,"数据插入失败,请重试!")
+    console.log("数据插入失败,请重试!",err)
   })
 })
 
@@ -126,8 +126,8 @@ router.post('/getGoodsById',(req,res) => {
     console.log(data)
   })
   .catch((err)=>{
-    res.send({err:-1,msg:"查询失败,请重试!"})
-    console.log(err)
+    res.send({err:-1,msg:"查询失败,请输入有效的商品id!"})
+    console.log("查询失败,请输入有效的商品id!",err)
   })
 })
 
@@ -150,7 +150,7 @@ router.post('/getGoodsList',(req,res) => {
   })
   .catch((err)=>{
     res.send({err:-1,msg:"查询失败,请重试!"})
-    console.log(err)
+    console.log("查询失败,请重试!",err)
   })
 })
 
@@ -184,7 +184,8 @@ router.post("/getInfosByPage",(req,res)=>{
     }
   })
   .catch((err)=>{
-    res.send({err:-1,msg:"查询失败,请重试!"})
+    res.send({err:-1,msg:"查询失败,输入值无效,请重试!"})
+    console.log("查询失败,输入值无效,请重试!",err)
   })
 })
 
@@ -212,16 +213,16 @@ router.post('/getInfosByType',(req,res)=>{
     let {result,allCount} = data
     let limit = page/Math.ceil(allCount/pageSize)
     if(limit>1){
-      console.log("输入查询页数过大")
-      res.send({err:-2,msg:"输入查询页数过大"})
+      console.log("输入查询页数过大或类型无效，请输入有效值")
+      res.send({err:-2,msg:"输入查询页数过大或类型无效，请输入有效值"})
     }else{
       res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
       console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
     }
   })
   .catch((err)=>{
-    console.log(err)
-    res.send({err:-1,msg:"查询失败,请重试!"})
+    console.log("查询失败,输入值无效，请输入有效值",err)
+    res.send({err:-1,msg:"查询失败,输入值无效，请输入有效值"})
   })
 })
 
@@ -245,20 +246,21 @@ router.post('/getInfosByName',(req,res)=>{
   let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
   findGoodsByName(name,page,pageSize)
   .then((data)=>{
-    console.log(data)
+    console.log("data[result]长度：",data.result.length)
     let {result,allCount} = data
     let limit = page/Math.ceil(allCount/pageSize)
     if(limit>1){
-      console.log("输入查询页数过大")
-      res.send({err:-2,msg:"输入查询页数过大"})
+      console.log("输入查询页数过大或商品不存在,请输入有效值")
+      res.send({err:-2,msg:"输入查询页数过大或商品不存在,请输入有效值"})
     }else{
+      console.log(data)
       res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
       console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
     }
   })
   .catch((err)=>{
-    console.log(err)
-    res.send({err:-1,msg:"查询失败,请重试!"})
+    console.log("查询失败,请输入有效商品名称",err)
+    res.send({err:-1,msg:"查询失败,请输入有效商品名称"})
   })
 })
 
@@ -286,16 +288,16 @@ router.post('/getInfosByStatus',(req,res)=>{
     let {result,allCount} = data
     let limit = page/Math.ceil(allCount/pageSize)
     if(limit>1){
-      console.log("输入查询页数过大")
-      res.send({err:-2,msg:"输入查询页数过大"})
+      console.log("输入查询页数过大或输入状态值无效,请重试!")
+      res.send({err:-2,msg:"输入查询页数过大或输入状态值无效,请重试!"})
     }else{
       res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
       console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
     }
   })
   .catch((err)=>{
-    console.log(err)
-    res.send({err:-1,msg:"查询失败,请重试!"})
+    console.log("查询失败,输入状态值无效,请重试!",err)
+    res.send({err:-1,msg:"查询失败,输入状态值无效,请重试!"})
   })
 })
 
@@ -321,7 +323,7 @@ router.post('/updateStatusById',(req,res)=>{
     res.send({err:0,msg:'商品状态更新成功'})
   })
   .catch((err) => {
-    console.log(err);
+    console.log('商品状态更新失败',err);
     res.send({err:-1,msg:'商品状态更新失败'});
   })
 })
