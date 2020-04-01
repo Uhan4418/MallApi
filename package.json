@@ -1,0 +1,30 @@
+{
+  "name": "mallapi",
+  "version": "1.0.0",
+  "description": "商城后台数据接口\r api生产指令\r apidoc -i routers/ -o public/apidoc/",
+  "main": "server.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "koa-router": "^8.0.8",
+    "mongoose": "^5.9.6",
+    "multer": "^1.4.2",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Uhan4418/MallApi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Uhan4418/MallApi/issues"
+  },
+  "homepage": "https://github.com/Uhan4418/MallApi#readme"
+}
