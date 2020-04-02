@@ -55,6 +55,28 @@
 				3.数据传输
 				4.成功回调
 			*/
+		/* 	upload = async () => {
+    let file = this.refs.img.files[0]
+    console.log(file);
+    if(!file) {return message.error('请先上传图片')}
+    // let {size,type} = file 
+    // console.log(type)
+    // let types = ['jpg',"jpeg",'gif','png']
+    // if(size>1000000){ return message.warning('图片超过1m')}
+    // if(types.indexOf(type.split('/')[1])===-1){ return message.warning('只允许jpg.jpeg,gif,png四种类型')}
+    let formdata = new FormData()
+    formdata.append('img',file)
+    console.log(formdata.get("img"))
+    let payload = {
+      formdata:formdata
+    }
+    let config = {
+      contentType:false,  //ajax有默认上传格式 取消默认
+			processData:false,  //默认将数据进行格式化处理 取消默认
+    }
+    // let result = await GoodsApi.upload(payload,config)
+    // console.log(result);
+  } */
 			
 		</script>
 	</body>

@@ -49,7 +49,7 @@ router.post('/file',upload.single('img'),(req,res)=>{
 			console.log("err:",err)
 			res.send({err:err,msg:'上传失败,请重试'});
 		}else{  //path为静态资源路径
-			res.send({err:0,msg:'上传成功',path:`http://localhost:3000/public/img/${name}.${extName}`});
+			res.send({err:0,msg:'上传成功',path:`http://localhost:3000/public/${name}.${extName}`});
 		}
 	})
 });
