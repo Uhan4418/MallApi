@@ -13,6 +13,9 @@ const {
  * @apiName getOrderList
  * @apiGroup Orders
  * 
+ * @apiParam {String} page 查询页码数.
+ * @apiParam {String} pageSize 每页的数据条数.
+ * 
  * @apiSuccess {String} err 状态码r.
  * @apiSuccess {String} msg  信息提示.
  * @apiSuccess {String} allCount  数据总数.
@@ -20,14 +23,24 @@ const {
  */
 // 查询所有商品信息  
 router.get('/getOrderList',(req,res) => {
-  findAll().then((infos)=>{
-    let allCount = infos.length
-    res.send({err:0,msg:"查询成功",allCount,list:infos})
-    console.log(infos)
+  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  findAll(page,pageSize)
+  .then((data)=>{
+    console.log(data)
+    let {result,allCount} = data
+    let limit = page/Math.ceil(allCount/pageSize)
+    if(limit>1){
+      console.log("输入查询页数过大,请处输入有效值")
+      res.send({err:-2,msg:"输入查询页数过大,请处输入有效值"})
+    }else{
+      res.send({err:0,msg:"查询成功",list:result,page,pageSize,allCount})
+      console.log("page：" + page + "/" + Math.ceil(allCount/pageSize))
+    }
   })
   .catch((err)=>{
-    res.send({err:-1,msg:"查询失败,请重试!"})
     console.log(err)
+    res.send({err:-1,msg:"查询失败,请重试!"})
   })
 })
 

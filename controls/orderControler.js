@@ -2,9 +2,13 @@
 const OrderModel = require("../db/model/orderModel")
 
 // 查询所有订单信息
-let findAll = async ()=>{
-  let result = await OrderModel.find()
-  return result
+let findAll = async (page,pageSize)=>{
+  let nameOrders = await OrderModel.find()
+  // 总数据条数
+  let allCount = nameOrders.length
+  // 每一页的数据
+  let result = await OrderModel.find().skip((Number(page)-1)*pageSize).limit(Number(pageSize))
+  return {result,allCount}
 }
 
 // 订单名称查询
