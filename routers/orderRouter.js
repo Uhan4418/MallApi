@@ -23,8 +23,8 @@ const {
  */
 // 查询所有商品信息  
 router.get('/getOrderList',(req,res) => {
-  let page = req.body.page || 1  // 查询的第几页数据 默认第一页
-  let pageSize = req.body.pageSize || 2  // 每页几条数据 默认两条
+  let page = req.query.page || 1  // 查询的第几页数据 默认第一页
+  let pageSize = req.query.pageSize || 2  // 每页几条数据 默认两条
   findAll(page,pageSize)
   .then((data)=>{
     console.log(data)
